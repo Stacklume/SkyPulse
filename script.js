@@ -1,6 +1,4 @@
 
-const API_KEY = "e7c7fe20f8c2e37fefccb7feb97c5f8e";
-
 const form = document.getElementById("weather-form");
 const cityInput = document.getElementById("city");
 const searchButton = document.getElementById("search-btn");
@@ -37,33 +35,13 @@ function getWeatherEmoji(condition) {
     if (type.includes("drizzle")) return "🌦️";
     if (type.includes("snow")) return "🌨️";
     if (type.includes("cloud")) return "☁️";
-    if (type.includes("mist") || type.includes("fog") ||
-        type.includes("haze")) return "🌫️";
+    if (
+        type.includes("mist") ||
+        type.includes("fog") ||
+        type.includes("haze")
+    ) return "🌫️";
 
     return "☀️";
-}
-
-async function fetchWeather(url) {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (!response.ok) {
-        if (response.status === 401) {
-            throw new Error("API key is invalid or not activated. Check your OpenWeather account.");
-        }
-
-        if (response.status === 404) {
-            throw new Error("City not found. Check the spelling and try again.");
-        }
-
-        if (response.status === 429) {
-            throw new Error("Too many requests. Please try again shortly.");
-        }
-
-        throw new Error(data.message || "Could not load weather.");
-    }
-
-    return data;
 }
 
 async function getWeather(city) {
@@ -73,40 +51,38 @@ async function getWeather(city) {
         return;
     }
 
-    if (API_KEY === "ADD_YOUR_OPENWEATHER_API_KEY_HERE") {
-        setStatus("Add your OpenWeather API key in script.js to enable live weather.", true);
-        return;
-    }
-
     searchButton.disabled = true;
     searchButton.textContent = "Loading...";
     setStatus(`Getting the latest forecast for ${city}...`);
 
-    const baseURL = "https://api.openweathermap.org/data/2.5";
-
     try {
-        const encodedCity = encodeURIComponent(city);
+        const response = await fetch(
+            `/api/weather?city=${encodeURIComponent(city)}`
+        );
 
-        const [current, forecast] = await Promise.all([
-            fetchWeather(
-                `${baseURL}/weather?q=${encodedCity}&appid=${API_KEY}&units=metric`
-            ),
-            fetchWeather(
-                `${baseURL}/forecast?q=${encodedCity}&appid=${API_KEY}&units=metric`
-            )
-        ]);
+        const data = await response.json();
 
-        displayCurrentWeather(current);
-        displayForecast(forecast);
+        if (!response.ok) {
+            throw new Error(
+                data.error || "Could not load weather."
+            );
+        }
+
+        displayCurrentWeather(data.current);
+        displayForecast(data.forecast);
 
         weatherSection.classList.remove("hidden");
         emptyState.classList.add("hidden");
 
-        setStatus(`Showing weather for ${current.name}.`);
+        setStatus(`Showing weather for ${data.current.name}.`);
     } catch (error) {
         weatherSection.classList.add("hidden");
         emptyState.classList.remove("hidden");
-        setStatus(error.message || "Something went wrong.", true);
+
+        setStatus(
+            error.message || "Something went wrong.",
+            true
+        );
     } finally {
         searchButton.disabled = false;
         searchButton.textContent = "Check weather ↗";
@@ -130,6 +106,7 @@ function displayCurrentWeather(data) {
         });
 
     document.getElementById("condition").textContent = condition;
+
     document.getElementById("temperature").textContent =
         Math.round(data.main.temp);
 
@@ -165,7 +142,6 @@ function displayForecast(data) {
     const forecastContainer = document.getElementById("forecast");
     forecastContainer.replaceChildren();
 
-    // Pick one forecast entry per day, preferring noon.
     const dailyForecasts = new Map();
 
     data.list.forEach((item) => {
