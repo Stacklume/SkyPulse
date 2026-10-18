@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SkyPulse — a beautiful, real-time weather dashboard.">
+    <title>SkyPulse | Weather Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+    <header class="navbar">
+        <a href="#" class="logo">
+            <span class="logo-icon">✳</span>
+            sky<span>pulse</span>
+        </a>
+        <span class="tagline"><span class="live-dot"></span> WEATHER, MADE SIMPLE</span>
+    </header>
+
+    <main>
+        <section class="intro">
+            <p class="eyebrow">YOUR DAILY WEATHER BRIEFING</p>
+            <h1>Every day, <span>in your forecast.</span></h1>
+            <p class="subtitle">A little more clarity for whatever the day brings.</p>
+        </section>
+
+        <form id="weather-form" class="searchbar">
+            <span class="search-icon">⌕</span>
+            <input id="city" type="text" placeholder="Search a city... e.g. Bengaluru" required>
+            <button type="submit" id="search-btn">Check weather ↗</button>
+        </form>
+
+        <p id="status" role="status">Search for a city to see its weather.</p>
+
+        <section id="weather" class="hidden">
+            <div class="weather-card">
+                <div class="weather-header">
+                    <div>
+                        <p class="eyebrow">CURRENT WEATHER</p>
+                        <h2 id="location">Bengaluru, IN</h2>
+                        <p id="date" class="muted"></p>
+                    </div>
+                    <span class="condition-badge" id="condition">Clear</span>
+                </div>
+
+                <div class="weather-main">
+                    <div>
+                        <div class="temperature"><span id="temperature">--</span><span class="degree">°C</span></div>
+                        <p id="feels">Feels like --°C</p>
+                        <p id="description" class="description">Current conditions</p>
+                    </div>
+
+                    <div class="weather-visual" id="weather-visual">
+                        <div class="sun"></div>
+                        <div class="cloud"></div>
+                    </div>
+                </div>
+
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-icon">↕</span>
+                        <div><small>HIGH / LOW</small><strong id="high-low">--° / --°</strong></div>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">◉</span>
+                        <div><small>HUMIDITY</small><strong id="humidity">--%</strong></div>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">≋</span>
+                        <div><small>WIND</small><strong id="wind">-- km/h</strong></div>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon">◌</span>
+                        <div><small>VISIBILITY</small><strong id="visibility">-- km</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="forecast-section">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">PLAN AHEAD</p>
+                        <h2>5-day outlook</h2>
+                    </div>
+                    <span class="muted">A little look at what's coming</span>
+                </div>
+                <div id="forecast" class="forecast-grid"></div>
+            </section>
+        </section>
+
+        <section class="empty-state" id="empty-state">
+            <div class="empty-weather">
+                <span>☀</span>
+                <span>☁</span>
+            </div>
+            <h2>Your next forecast is one search away.</h2>
+            <p>Discover current conditions, temperatures, humidity and the five-day outlook for any city.</p>
+
+            <div class="city-suggestions">
+                <button type="button" data-city="Bengaluru">Bengaluru ↗</button>
+                <button type="button" data-city="London">London ↗</button>
+                <button type="button" data-city="Tokyo">Tokyo ↗</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span>Made with curiosity & a little sunshine.</span>
+        <span>Weather data by OpenWeather</span>
+    </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
